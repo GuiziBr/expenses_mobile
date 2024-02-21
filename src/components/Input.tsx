@@ -1,19 +1,55 @@
-import { IInputProps, Input as NativeBaseInput } from 'native-base'
+import { HStack, IInputProps, Icon, Input as NativeBaseInput } from 'native-base'
+import { useCallback, useState } from 'react'
 
-export function Input({ ...rest }: IInputProps) {
+type InputProps = IInputProps & {
+  icon?: unknown
+  iconName?: string
+}
+
+
+export function Input({ icon, iconName,...rest }: InputProps) {
+
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true)
+  }, [])
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false)
+  },[])
+
   return (
-    <NativeBaseInput
-      bg='blue.700'
+    <HStack
+      bg={'blue.700'}
       h={16}
       px={4}
-      borderWidth={0}
-      fontSize={'md'}
-      color='white.200'
-      fontFamily={'body'}
       mb={4}
-      placeholderTextColor={'gray.500'}
-      _focus={{ bg: 'blue.700', borderWidth: 1, borderColor: 'orange.700' }}
-      {...rest}
-    />
+      borderRadius={'sm'}
+      alignItems={'center'}
+      {...isFocused && { borderColor: 'orange.700', borderWidth: 1 }}
+    >
+      {icon &&
+        <Icon
+          as={icon}
+          {...isFocused && { color: 'orange.700' }}
+          size={'md'}
+          name={iconName}
+        />
+      }
+
+      <NativeBaseInput
+        flex={1}
+        borderWidth={0}
+        fontSize={'md'}
+        color='white.200'
+        fontFamily={'body'}
+        placeholderTextColor={'gray.500'}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        _focus={{ bg: 'blue.700' }}
+        {...rest}
+      />
+    </HStack>
   )
 }
