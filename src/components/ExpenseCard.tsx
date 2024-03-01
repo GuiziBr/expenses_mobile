@@ -1,25 +1,53 @@
-import { HStack } from 'native-base'
+import { Center, HStack, Text } from 'native-base'
+import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
-type Expense =  {
-  id: string
+type Props = TouchableOpacityProps & {
   description: string
   category: string
-  amount: number
-  formattedAmount: string
-  formattedDate: string
-  type: 'income' | 'outcome'
-  date: Date
-  paymentType: string
-  bank?: string
-  store?: string
-  dueDate: Date
-  formattedDueDate?: string
-  mobileFormatDate: string
-  mobileFormatDueDate?: string
+  amount: string
 }
 
-export function ExpenseCard() {
+export function ExpenseCard({ description, category, amount, ...rest }: Props) {
   return (
-    <HStack/>
+    <TouchableOpacity {...rest} >
+      <HStack
+        bg="white.100"
+        mx={1}
+        h={12}
+        borderRadius="md"
+        mb={2}
+      >
+        <Center
+          borderRightWidth={1}
+          borderRightColor="blue.200"
+          width="33%"
+          alignItems="flex-start"
+          pl={3}
+          justifyContent="center"
+        >
+          <Text numberOfLines={1} fontSize="md">{description}</Text>
+        </Center>
+
+        <Center
+          borderRightWidth={1}
+          borderRightColor="blue.200"
+          width="33%"
+          alignItems="flex-start"
+          pl={3}
+        >
+          <Text numberOfLines={1} fontSize="md">{category}</Text>
+        </Center>
+
+        <Center
+          borderRightWidth={1}
+          borderRightColor="blue.200"
+          width="33%"
+          alignItems="flex-start"
+          pl={3}
+        >
+          <Text numberOfLines={1} fontSize="md" color="green">{amount}</Text>
+        </Center>
+      </HStack>
+    </TouchableOpacity>
   )
 }

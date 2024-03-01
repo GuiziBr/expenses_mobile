@@ -1,4 +1,4 @@
-import { Card } from '@components/Card'
+import { BalanceCard } from '@components/BalanceCard'
 import { ExpenseTable } from '@components/ExpenseTable'
 import { HomeHeader } from '@components/HomeHeader'
 import { FontAwesome6, Entypo } from '@expo/vector-icons'
@@ -8,8 +8,8 @@ export function SharedDashboard() {
   return (
     <VStack flex={1}>
       <HomeHeader/>
-      <HStack justifyContent="space-evenly" mt="-10" mb={6}>
-        <Card
+      <HStack justifyContent="space-evenly" mt="-10" mb={5}>
+        <BalanceCard
           cardTitle="Incomes"
           cardText="$752.46"
           cardBackgroundColor="white.100"
@@ -18,7 +18,7 @@ export function SharedDashboard() {
           iconName="arrow-with-circle-up"
           iconColor="green"
         />
-        <Card
+        <BalanceCard
           cardTitle="Outcomes"
           cardText="$752.46"
           cardBackgroundColor="white.100"
@@ -27,7 +27,7 @@ export function SharedDashboard() {
           iconName="arrow-with-circle-down"
           iconColor="red.500"
         />
-        <Card
+        <BalanceCard
           cardTitle="Balance"
           cardText="-$752.46"
           cardBackgroundColor='orange.500'
