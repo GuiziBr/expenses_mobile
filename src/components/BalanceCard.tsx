@@ -10,7 +10,7 @@ type Props = IIconProps & {
   cardTitle: string
 }
 
-export function Card({
+export function BalanceCard({
   icon,
   iconName,
   iconColor,

@@ -1,6 +1,6 @@
 import { Entypo, MaterialIcons, Octicons } from '@expo/vector-icons'
 import { BottomTabNavigationProp, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Balance } from '@screens/Balance'
+import { BalanceDashboard } from '@screens/BalanceDashboard'
 import { PersonalDashboard } from '@screens/PersonalDashboard'
 import { SharedDashboard } from '@screens/SharedDashboard'
 import { useTheme } from 'native-base'
@@ -53,7 +53,7 @@ export function AppRoutes() {
       />
       <Screen
         name='balance'
-        component={Balance}
+        component={BalanceDashboard}
         options={{
           tabBarIcon: ({ color }) =>
             <MaterialIcons name='account-balance' size={ICON_SIZE} color={color}/>

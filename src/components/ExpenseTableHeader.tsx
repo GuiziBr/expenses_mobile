@@ -17,6 +17,8 @@ export function ExpenseTableHeader({ content, onPress }: ExpenseTableHeaderProps
           overflow="hidden"
           flexDirection="row"
           alignItems="center"
+          minW="33%"
+          pl={2}
         >
           <Text
             color="gray.300"
@@ -35,9 +37,12 @@ export function ExpenseTableHeader({ content, onPress }: ExpenseTableHeaderProps
       )}
       horizontal
       showsHorizontalScrollIndicator={false}
-      _contentContainerStyle={{ justifyContent: 'space-between', w: '100%' }}
+      _contentContainerStyle={{
+        mx: 1,
+        w: '100%',
+      }}
       maxH={8}
-      mx={1}
+      scrollEnabled={false}
     />
   )
 }
