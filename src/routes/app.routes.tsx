@@ -23,7 +23,6 @@ export function AppRoutes() {
   return (
     <Navigator screenOptions={{
       headerShown: false,
-      tabBarShowLabel: false,
       tabBarActiveTintColor: colors.orange['700'],
       tabBarStyle: {
         backgroundColor: colors.blue['700'],
@@ -32,12 +31,13 @@ export function AppRoutes() {
         paddingBottom: 20,
         paddingTop: 10
       }
-
     }}>
       <Screen
+
         name='personalDashboard'
         component={PersonalDashboard}
         options={{
+          tabBarLabel: 'Personal',
           tabBarIcon: ({ color }) =>
             <Octicons name='person-fill' size={ICON_SIZE} color={color}/>
         }}
@@ -46,6 +46,7 @@ export function AppRoutes() {
         name='sharedDashboard'
         component={SharedDashboard}
         options={{
+          tabBarLabel: 'Shared',
           tabBarIcon: ({ color }) =>
             <Entypo name='slideshare' size={ICON_SIZE} color={color}/>
         }}
@@ -55,6 +56,7 @@ export function AppRoutes() {
         name='balance'
         component={BalanceDashboard}
         options={{
+          tabBarLabel: 'Balance',
           tabBarIcon: ({ color }) =>
             <MaterialIcons name='account-balance' size={ICON_SIZE} color={color}/>
         }}
