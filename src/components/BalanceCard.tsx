@@ -1,6 +1,6 @@
-import { HStack, Heading, IIconProps, Icon, VStack } from 'native-base'
+import { HStack, Heading, IStackProps, Icon, VStack } from 'native-base'
 
-type Props = IIconProps & {
+type Props = IStackProps & {
   icon?: unknown
   iconName?: string
   iconColor?: string
@@ -8,6 +8,7 @@ type Props = IIconProps & {
   fontTextColor: string
   cardText: string
   cardTitle: string
+  headingTextColor: string
 }
 
 export function BalanceCard({
@@ -17,7 +18,9 @@ export function BalanceCard({
   cardBackgroundColor,
   fontTextColor,
   cardText,
-  cardTitle
+  cardTitle,
+  headingTextColor,
+  ...rest
 }: Props) {
   return (
     <VStack
@@ -26,26 +29,29 @@ export function BalanceCard({
       justifyContent="space-evenly"
       px={2.5}
       borderRadius="md"
-      w="32%"
+      minWidth={32}
+      {...rest}
     >
       <HStack
         alignItems='center'
-        justifyContent="space-between"
+        justifyContent="center"
       >
         <Heading
           flex={1}
           fontSize="sm"
-          color={fontTextColor}
+          color={headingTextColor}
           fontFamily={'heading'}
         >
           {cardTitle}
         </Heading>
-        <Icon
-          as={icon}
-          name={iconName}
-          color={iconColor}
-          size="sm"
-        />
+        {icon && (
+          <Icon
+            as={icon}
+            name={iconName}
+            color={iconColor}
+            size="sm"
+          />
+        )}
       </HStack>
       <Heading color={fontTextColor} fontFamily={'body'}>{cardText}</Heading>
     </VStack>
