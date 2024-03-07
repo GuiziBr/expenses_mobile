@@ -17,6 +17,7 @@ export function SharedDashboard() {
           icon={Entypo}
           iconName="arrow-with-circle-up"
           iconColor="green"
+          headingTextColor='blue.800'
         />
         <BalanceCard
           cardTitle="Outcomes"
@@ -26,6 +27,7 @@ export function SharedDashboard() {
           icon={Entypo}
           iconName="arrow-with-circle-down"
           iconColor="red.500"
+          headingTextColor='blue.800'
         />
         <BalanceCard
           cardTitle="Balance"
@@ -35,11 +37,10 @@ export function SharedDashboard() {
           icon={FontAwesome6}
           iconName="dollar"
           iconColor="white.100"
+          headingTextColor='white.100'
         />
       </HStack>
-
       <ExpenseTable/>
-
     </VStack>
   )
 }

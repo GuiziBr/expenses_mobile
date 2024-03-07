@@ -17,9 +17,9 @@ export function PersonalDashboard() {
           icon={FontAwesome6}
           iconName="dollar"
           iconColor="white.100"
+          headingTextColor='white.100'
         />
       </HStack>
-
       <ExpenseTable/>
     </VStack>
   )
