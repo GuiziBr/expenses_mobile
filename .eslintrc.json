@@ -90,6 +90,7 @@
       {
         "multiline": true
       }
-    ]
+    ],
+    "no-useless-catch": "off"
   }
 }

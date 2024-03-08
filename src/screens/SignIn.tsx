@@ -2,10 +2,42 @@ import Logo from '@assets/logo.png'
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 import { AntDesign, Feather } from '@expo/vector-icons'
-import { Center, Heading, Image, KeyboardAvoidingView, ScrollView, VStack } from 'native-base'
+import { useAuth } from '@hooks/useAuth'
+import { AppError } from '@utils/AppError'
+import { Center, Heading, Image, KeyboardAvoidingView, ScrollView, VStack, useToast } from 'native-base'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Platform } from 'react-native'
 
+type FormData = {
+  email: string
+  password: string
+}
+
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false)
+  const toast = useToast()
+
+  const { signIn } = useAuth()
+
+  const { control, handleSubmit, formState: { errors }} = useForm<FormData>()
+
+  async function handleSignIn({ email, password }: FormData) {
+    try {
+      setIsLoading(true)
+      await signIn(email, password)
+    } catch (error) {
+      setIsLoading(false)
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Error signing in. Try again.'
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500'
+      })
+    }
+  }
+
   return (
     <KeyboardAvoidingView
       flex={1}
@@ -22,8 +54,7 @@ export function SignIn() {
           </Center>
           <Center>
             <Heading
-              marginTop={16}
-              marginBottom={6}
+              marginTop={12}
               fontFamily={'heading'}
               color={'white.100'}
             >
@@ -33,20 +64,43 @@ export function SignIn() {
               size={32}
               color={'white'}
             />
-            <Input
-              placeholder='E-mail'
-              keyboardType='email-address'
-              autoCapitalize='none'
-              icon={AntDesign}
-              iconName='mail'
+            <Controller
+              control={control}
+              name='email'
+              rules={{ required: 'E-mail is required' }}
+              render={({ field: { onChange }}) => (
+                <Input
+                  placeholder='E-mail'
+                  keyboardType='email-address'
+                  autoCapitalize='none'
+                  icon={AntDesign}
+                  iconName='mail'
+                  errorMessage={errors.email?.message}
+                  onChangeText={onChange}
+                />
+              )}
             />
-            <Input
-              placeholder='Password'
-              secureTextEntry
-              icon={Feather}
-              iconName='lock'
+
+            <Controller
+              control={control}
+              name='password'
+              rules={{ required: 'Password is required' }}
+              render={({ field: { onChange }}) => (
+                <Input
+                  placeholder='Password'
+                  secureTextEntry
+                  icon={Feather}
+                  iconName='lock'
+                  errorMessage={errors.password?.message}
+                  onChangeText={onChange}
+                />
+              )}
             />
-            <Button title='Login'/>
+            <Button
+              title='Login'
+              onPress={handleSubmit(handleSignIn)}
+              isLoading={isLoading}
+            />
           </Center>
         </VStack>
       </ScrollView>
