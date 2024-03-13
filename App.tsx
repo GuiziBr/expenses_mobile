@@ -1,5 +1,6 @@
 import { Loading } from '@components/Loading'
 import { AuthContextProvider } from '@contexts/AuthContext'
+import { ExpenseContextProvider } from '@contexts/ExpenseContext'
 import { Roboto_400Regular, Roboto_700Bold, Roboto_900Black, useFonts } from '@expo-google-fonts/roboto'
 import { NativeBaseProvider } from 'native-base'
 import { useEffect } from 'react'
@@ -23,7 +24,9 @@ export default function App() {
         translucent
       />
       <AuthContextProvider>
-        {fontsLoaded ? <Routes/> : <Loading/>}
+        <ExpenseContextProvider>
+          {fontsLoaded ? <Routes/> : <Loading/>}
+        </ExpenseContextProvider>
       </AuthContextProvider>
     </NativeBaseProvider>
   )
