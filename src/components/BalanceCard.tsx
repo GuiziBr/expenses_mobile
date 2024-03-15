@@ -1,4 +1,5 @@
 import { HStack, Heading, IStackProps, Icon, VStack } from 'native-base'
+import { Loading } from './Loading'
 
 type Props = IStackProps & {
   icon?: unknown
@@ -9,6 +10,7 @@ type Props = IStackProps & {
   cardText: string
   cardTitle: string
   headingTextColor: string
+  isLoading?: boolean
 }
 
 export function BalanceCard({
@@ -20,8 +22,10 @@ export function BalanceCard({
   cardText,
   cardTitle,
   headingTextColor,
+  isLoading,
   ...rest
 }: Props) {
+
   return (
     <VStack
       bgColor={cardBackgroundColor}
@@ -53,7 +57,9 @@ export function BalanceCard({
           />
         )}
       </HStack>
-      <Heading color={fontTextColor} fontFamily={'body'}>{cardText}</Heading>
+      {isLoading ? <Loading /> : (
+        <Heading color={fontTextColor} fontFamily={'body'}>{cardText}</Heading>
+      )}
     </VStack>
   )
 }
