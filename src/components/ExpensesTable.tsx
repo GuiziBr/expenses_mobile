@@ -1,27 +1,28 @@
+import { Filters } from '@contexts/ExpenseContext'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { FlatList, VStack } from 'native-base'
 import { ExpenseCard } from './ExpenseCard'
 import { ExpenseTableHeader } from './ExpenseTableHeader'
-
-const TABLE_HEADER_CONTENT = ['Expense', 'Category', 'Amount']
+import { Loading } from './Loading'
 
 function handleSortTable(sortBy: string) {
   console.log('sortBy', sortBy)
 }
 
 type ExpenseTableProps = {
+  filters: Filters
   expenses: FormattedExpense[]
+  onEndReached: () => void
+  isLoading: boolean
 }
 
-export function ExpenseTable({ expenses }: ExpenseTableProps) {
-
+export function ExpensesTable({ expenses, onEndReached, isLoading }: ExpenseTableProps) {
   return (
-    <VStack flex={1} mb={5} >
+    <VStack flex={1}>
       <ExpenseTableHeader
-        content={TABLE_HEADER_CONTENT}
+        content={['Expense', 'Category', 'Amount']}
         onPress={handleSortTable}
       />
-
       <FlatList
         data={expenses}
         keyExtractor={item => item.id}
@@ -32,9 +33,12 @@ export function ExpenseTable({ expenses }: ExpenseTableProps) {
             amount={item.formattedAmount}
           />
         )}
-        showsVerticalScrollIndicator={false}
         _contentContainerStyle={{ mt: 2 }}
+        ListFooterComponent={() => isLoading && <Loading />}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={.5}
       />
+
 
     </VStack>
   )

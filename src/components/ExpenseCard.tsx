@@ -13,7 +13,7 @@ export function ExpenseCard({ description, category, amount, ...rest }: Props) {
       <HStack
         bg="white.100"
         mx={1}
-        h={12}
+        h={16}
         borderRadius="md"
         mb={2}
       >

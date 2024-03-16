@@ -25,7 +25,6 @@ export function BalanceCard({
   isLoading,
   ...rest
 }: Props) {
-
   return (
     <VStack
       bgColor={cardBackgroundColor}
