@@ -33,7 +33,6 @@ export function AppRoutes() {
       }
     }}>
       <Screen
-
         name='personalDashboard'
         component={PersonalDashboard}
         options={{

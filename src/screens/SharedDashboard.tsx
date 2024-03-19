@@ -1,9 +1,10 @@
 import { BalanceCard } from '@components/BalanceCard'
+import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
 import { Filters } from '@contexts/ExpenseContext'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
-import { Entypo, FontAwesome6 } from '@expo/vector-icons'
+import { Entypo, Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
@@ -12,32 +13,30 @@ import { assemblePersonalExpense } from '@utils/expenseAssemblers'
 import { formatAmount } from '@utils/formatAmount'
 import { AxiosRequestConfig } from 'axios'
 import { endOfMonth, format, startOfMonth } from 'date-fns'
-import { HStack, VStack, useToast } from 'native-base'
+import { Fab, HStack, Icon, VStack, useToast } from 'native-base'
 import { useCallback, useState } from 'react'
 
 export function SharedDashboard() {
   const endOfMonthDate = format(endOfMonth(new Date()), 'yyyy-MM-dd')
+  const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
 
   const [isLoading, setIsLoading] = useState(false)
   const [isBalanceLoading, setIsBalanceLoading] = useState(false)
-  const [currentFilters, setCurrentFilter] = useState<Filters>({
-    startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
-    endDate: endOfMonthDate
-  })
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
+  const [isFilterVisible, setIsFilterVisible] = useState(false)
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
 
-  const loadExpenses = async(isInitialLoad?: boolean): Promise<void> => {
+  const loadExpenses = async(isInitialLoad?: boolean, filters?: Filters): Promise<void> => {
     try {
       setIsLoading(true)
 
       const config: AxiosRequestConfig = {
         params: {
-          ...currentFilters?.startDate && { startDate: currentFilters.startDate },
-          ...currentFilters?.endDate && { endDate: currentFilters.endDate },
+          startDate: filters?.startDate || startOfMonthDate,
+          endDate: filters?.endDate || endOfMonthDate,
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 20,
         },
@@ -72,7 +71,7 @@ export function SharedDashboard() {
       setIsBalanceLoading(true)
 
       await Promise.all([
-        getBalance(currentFilters),
+        getBalance({ startDate: startOfMonthDate, endDate: endOfMonthDate }),
         loadExpenses(true)
       ])
     } catch (error) {
@@ -141,7 +140,21 @@ export function SharedDashboard() {
         expenses={expenses}
         isLoading={isLoading}
         onEndReached={loadNextExpenses}
-        filters={currentFilters}
+      />
+      <Fab
+        renderInPortal={false}
+        placement='bottom-right'
+        size={16}
+        bg={'orange.700'}
+        icon={<Icon as={Feather} name="menu" size="lg" color="white.100"/>}
+        _pressed={{ bg: 'blue.800' }}
+        onPress={() => setIsFilterVisible(true)}
+      />
+      <ExpensesFilterModal
+        isVisible={isFilterVisible}
+        onClose={() => setIsFilterVisible(false)}
+        onSubmit={() => console.log('FILTERING')}
+        title='Filter Personal'
       />
     </VStack>
 

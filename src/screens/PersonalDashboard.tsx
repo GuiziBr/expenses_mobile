@@ -1,11 +1,10 @@
 import { BalanceCard } from '@components/BalanceCard'
-import { ExpenseCard } from '@components/ExpenseCard'
-import { ExpenseTableHeader } from '@components/ExpenseTableHeader'
+import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
+import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
-import { Loading } from '@components/Loading'
 import { Filters } from '@contexts/ExpenseContext'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
-import { FontAwesome6 } from '@expo/vector-icons'
+import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
@@ -14,42 +13,44 @@ import { assemblePersonalExpense } from '@utils/expenseAssemblers'
 import { formatAmount } from '@utils/formatAmount'
 import { AxiosRequestConfig } from 'axios'
 import { endOfMonth, format, startOfMonth } from 'date-fns'
-import { FlatList, HStack, VStack, useToast } from 'native-base'
+import { Fab, HStack, Icon, VStack, useToast } from 'native-base'
 import { useCallback, useState } from 'react'
 
 export function PersonalDashboard() {
   const endOfMonthDate = format(endOfMonth(new Date()), 'yyyy-MM-dd')
+  const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
 
   const [isLoading, setIsLoading] = useState(false)
-  const [isDashboardLoading, setIsDashboardLoading] = useState(true)
-  const [currentFilters, setCurrentFilter] = useState<Filters>({
-    startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
-    endDate: endOfMonthDate
-  })
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false)
+
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
+  const [isFilterVisible, setIsFilterVisible] = useState(false)
 
-  const toast = useToast()
   const { balance, getBalance } = useExpense()
+  const toast = useToast()
 
-  const loadExpenses = async(): Promise<void> => {
+  async function loadExpenses(isInitialLoad?: boolean, filters?: Filters): Promise<void> {
     try {
       setIsLoading(true)
 
       const config: AxiosRequestConfig = {
         params: {
-          ...currentFilters?.startDate && { startDate: currentFilters.startDate },
-          ...currentFilters?.endDate && { endDate: currentFilters.endDate },
-          offset: expenses.length,
+          startDate: filters?.startDate || startOfMonthDate,
+          endDate: filters?.endDate || endOfMonthDate,
+          offset: isInitialLoad ? 0 : expenses.length,
           limit: 20,
         },
       }
-
       const { data, headers } = await api.get('/expenses/personal', config)
 
       setTotalCount(Number(headers['x-total-count']))
 
-      setExpenses((existingExpenses) => [...existingExpenses, ...data.map(assemblePersonalExpense)])
+      if(isInitialLoad) {
+        setExpenses(data.map(assemblePersonalExpense))
+      } else {
+        setExpenses((existingExpenses) => [...existingExpenses, ...data.map(assemblePersonalExpense)])
+      }
 
     } catch (error) {
       const isAppError = error instanceof AppError
@@ -68,11 +69,12 @@ export function PersonalDashboard() {
 
   async function loadDashboard(): Promise<void> {
     try {
-      await Promise.all([
-        getBalance(currentFilters),
-        loadExpenses()
-      ])
+      setIsBalanceLoading(true)
 
+      await Promise.all([
+        getBalance({ startDate: startOfMonthDate, endDate: endOfMonthDate }),
+        loadExpenses(true)
+      ])
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Error loading expenses. Try again.'
@@ -83,22 +85,17 @@ export function PersonalDashboard() {
         bgColor: 'red.500'
       })
     } finally {
-      setIsDashboardLoading(false)
+      setIsBalanceLoading(false)
     }
   }
 
   async function loadNextExpenses() {
     if(isLoading || expenses.length === totalCount) return
-    await loadExpenses()
+    await loadExpenses(false)
   }
 
   useFocusEffect(useCallback(() => {
     loadDashboard()
-    return () => {
-      setExpenses([])
-      setIsLoading(true)
-      setIsDashboardLoading(true)
-    }
   }, []))
 
   return (
@@ -114,35 +111,29 @@ export function PersonalDashboard() {
           iconName="dollar"
           iconColor="white.100"
           headingTextColor='white.100'
-          isLoading={isDashboardLoading}
+          isLoading={isBalanceLoading}
         />
       </HStack>
-      <VStack flex={1}>
-        <ExpenseTableHeader
-          content={['Expense', 'Category', 'Amount']}
-          onPress={() => console.log('Sorting')}
-        />
-        <FlatList
-          data={expenses}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <ExpenseCard
-              description={item.description}
-              category={item.category}
-              amount={item.formattedAmount}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ mt: 2 }}
-          ListFooterComponent={() => isLoading && <Loading />}
-          onEndReached={loadNextExpenses}
-          onEndReachedThreshold={1}
-          // refreshing={isLoading}
-          // onRefresh={() => console.log('REFRESH')}
-        />
-
-
-      </VStack>
+      <ExpensesTable
+        expenses={expenses}
+        isLoading={isLoading}
+        onEndReached={loadNextExpenses}
+      />
+      <Fab
+        renderInPortal={false}
+        placement='bottom-right'
+        size={16}
+        bg={'orange.700'}
+        icon={<Icon as={Feather} name="menu" size="lg" color="white.100"/>}
+        _pressed={{ bg: 'blue.800' }}
+        onPress={() => setIsFilterVisible(true)}
+      />
+      <ExpensesFilterModal
+        isVisible={isFilterVisible}
+        onClose={() => setIsFilterVisible(false)}
+        onSubmit={() => console.log('FILTERING')}
+        title='Filter Personal'
+      />
     </VStack>
   )
 }
