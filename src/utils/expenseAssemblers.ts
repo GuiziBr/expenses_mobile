@@ -15,6 +15,4 @@ export const assemblePersonalExpense = (expense: Omit<Expense, 'type'>): Omit<Fo
   store: expense.store?.name,
   dueDate: expense.due_date,
   formattedDueDate: expense.due_date && formatDate(expense.due_date),
-  mobileFormatDate: formatDate(expense.date, false),
-  mobileFormatDueDate: expense.due_date && formatDate(expense.due_date, false),
 })
