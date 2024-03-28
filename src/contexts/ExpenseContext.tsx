@@ -1,8 +1,8 @@
 import { api } from '@services/api'
+import constants from '@utils/constants'
 import { AxiosRequestConfig } from 'axios'
 import { format } from 'date-fns'
 import { ReactNode, createContext, useCallback, useState } from 'react'
-
 type BalanceState = {
   personalBalance: number
   sharedBalance: {
@@ -42,7 +42,10 @@ export function ExpenseContextProvider({ children }: ExpenseContextProviderProps
     const params = {
       ...startDate && { startDate },
       ...endDate && { endDate },
-      ...filterBy && { filterBy, filterValue },
+      ...filterBy && {
+        filterBy: constants.filterValues[filterBy as keyof typeof constants.filterValues],
+        filterValue
+      },
     }
     const config: AxiosRequestConfig = { params }
     const response = await api.get('/balance', config)
@@ -52,7 +55,10 @@ export function ExpenseContextProvider({ children }: ExpenseContextProviderProps
   }, [])
 
   return (
-    <ExpenseContext.Provider value={{ balance, getBalance }}>
+    <ExpenseContext.Provider value={{
+      balance,
+      getBalance,
+    }}>
       {children}
     </ExpenseContext.Provider>
   )

@@ -17,4 +17,10 @@ export default {
       description: 'Store',
     },
   ],
+  filterValues: {
+    categories: 'category',
+    paymentType: 'payment_type',
+    banks: 'bank',
+    stores: 'store',
+  },
 }

@@ -9,6 +9,7 @@ import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
 import { AppError } from '@utils/AppError'
+import constants from '@utils/constants'
 import { assemblePersonalExpense } from '@utils/expenseAssemblers'
 import { formatAmount } from '@utils/formatAmount'
 import { AxiosRequestConfig } from 'axios'
@@ -38,6 +39,10 @@ export function PersonalDashboard() {
         params: {
           startDate: filters?.startDate || startOfMonthDate,
           endDate: filters?.endDate || endOfMonthDate,
+          ...filters?.filterBy && {
+            filterBy: constants.filterValues[filters.filterBy as keyof typeof constants.filterValues],
+            filterValue: filters.filterValue
+          },
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 20,
         },
@@ -89,12 +94,20 @@ export function PersonalDashboard() {
     }
   }
 
-  async function loadNextExpenses() {
+  async function loadNextExpenses(): Promise<void> {
     if(isLoading || expenses.length === totalCount) return
     await loadExpenses(false)
   }
 
+  async function handleFilterTable(selectedFilters: Filters): Promise<void> {
+    await Promise.all([
+      loadExpenses(true, selectedFilters),
+      getBalance(selectedFilters),
+    ])
+  }
+
   useFocusEffect(useCallback(() => {
+    setExpenses([])
     loadDashboard()
   }, []))
 
@@ -131,8 +144,8 @@ export function PersonalDashboard() {
       <ExpensesFilterModal
         isVisible={isFilterVisible}
         onClose={() => setIsFilterVisible(false)}
-        onSubmit={() => console.log('FILTERING')}
-        title='Filter Personal'
+        onSubmit={handleFilterTable}
+        title='Personal Expenses'
       />
     </VStack>
   )
