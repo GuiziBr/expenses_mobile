@@ -1,4 +1,3 @@
-import { Filters } from '@contexts/ExpenseContext'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { FlatList, VStack } from 'native-base'
 import { ExpenseCard } from './ExpenseCard'
@@ -10,7 +9,6 @@ function handleSortTable(sortBy: string) {
 }
 
 type ExpenseTableProps = {
-  filters: Filters
   expenses: FormattedExpense[]
   onEndReached: () => void
   isLoading: boolean
@@ -23,23 +21,24 @@ export function ExpensesTable({ expenses, onEndReached, isLoading }: ExpenseTabl
         content={['Expense', 'Category', 'Amount']}
         onPress={handleSortTable}
       />
-      <FlatList
-        data={expenses}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <ExpenseCard
-            description={item.description}
-            category={item.category}
-            amount={item.formattedAmount}
-          />
-        )}
-        _contentContainerStyle={{ mt: 2 }}
-        ListFooterComponent={() => isLoading && <Loading />}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={.5}
-      />
+      {expenses.length === 0 ? <Loading /> : (
+        <FlatList
+          data={expenses}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <ExpenseCard
+              description={item.description}
+              category={item.category}
+              amount={item.formattedAmount}
+            />
+          )}
+          _contentContainerStyle={{ mt: 2 }}
+          ListFooterComponent={() => isLoading && <Loading />}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={.5}
+        />
 
-
+      )}
     </VStack>
   )
 }
