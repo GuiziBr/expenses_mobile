@@ -9,12 +9,14 @@ export function HomeHeader() {
 
   return (
     <HStack bg="blue.500" pt={16} pb={16} px={5} alignItems='center'>
-      <UserAvatar
-        source={{ uri: `https://github.com/${user.avatar}.png` }}
-        alt='Users avatar'
-        size={16}
-        mr={4}
-      />
+      {user.avatar && (
+        <UserAvatar
+          source={{ uri: `https://github.com/${user.avatar}.png` }}
+          alt='Users avatar'
+          size={16}
+          mr={4}
+        />
+      )}
       <VStack flex={1}>
         <Text color="white.100" fontSize="md">Hello</Text>
         <Heading color="white.100" fontSize="md">{user.name}</Heading>
