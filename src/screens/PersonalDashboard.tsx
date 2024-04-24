@@ -3,7 +3,8 @@ import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
 import { Filters } from '@contexts/ExpenseContext'
-import { FormattedExpense } from '@dtos/ExpenseDTO'
+import { OrderTypes } from '@dtos/DashboardDTO'
+import { FormattedExpense, OrderByTypes } from '@dtos/ExpenseDTO'
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
@@ -27,11 +28,14 @@ export function PersonalDashboard() {
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [isFilterVisible, setIsFilterVisible] = useState(false)
+  const [orderByColumns, setOrderByColumns] = useState<OrderByTypes[]>(
+    constants.tableHeader.map(column => ({ orderBy: column.description, orderType: 'asc', isCurrent: false }))
+  )
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
 
-  async function loadExpenses(isInitialLoad?: boolean, filters?: Filters): Promise<void> {
+  async function loadExpenses(isInitialLoad?: boolean, filters?: Filters, orderParams?: OrderTypes): Promise<void> {
     try {
       setIsLoading(true)
 
@@ -43,6 +47,7 @@ export function PersonalDashboard() {
             filterBy: constants.filterValues[filters.filterBy as keyof typeof constants.filterValues],
             filterValue: filters.filterValue
           },
+          ...orderParams && { ...orderParams },
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 20,
         },
@@ -104,6 +109,16 @@ export function PersonalDashboard() {
       loadExpenses(true, selectedFilters),
       getBalance(selectedFilters),
     ])
+  }
+
+  function getOrderByType(columnName: string): 'asc' | 'desc' {
+    const currentOrder = orderByColumns.find((orderByColumn) => orderByColumn.orderBy === columnName)
+    return currentOrder?.orderBy === 'asc' ? 'desc' : 'asc'
+
+  }
+
+  async function handleSortTable(columnName: string): Promise<void> {
+    const orderParams: OrderTypes = { orderBy: columnName, orderType: getOrderByType(columnName) }
   }
 
   useFocusEffect(useCallback(() => {

@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
 import { AppError } from '@utils/AppError'
 import constants from '@utils/constants'
-import { assemblePersonalExpense } from '@utils/expenseAssemblers'
+import { assembleSharedExpense } from '@utils/expenseAssemblers'
 import { formatAmount } from '@utils/formatAmount'
 import { AxiosRequestConfig } from 'axios'
 import { endOfMonth, format, startOfMonth } from 'date-fns'
@@ -51,9 +51,9 @@ export function SharedDashboard() {
       setTotalCount(Number(headers['x-total-count']))
 
       if(isInitialLoad) {
-        setExpenses(data.map(assemblePersonalExpense))
+        setExpenses(data.map(assembleSharedExpense))
       } else {
-        setExpenses((existingExpenses) => [...existingExpenses, ...data.map(assemblePersonalExpense)])
+        setExpenses((existingExpenses) => [...existingExpenses, ...data.map(assembleSharedExpense)])
       }
 
     } catch (error) {
@@ -105,6 +105,11 @@ export function SharedDashboard() {
     ])
   }
 
+  function handleSortTable(columnName: string): void {
+    console.log('sortBy', columnName)
+  }
+
+
   useFocusEffect(useCallback(() => {
     setExpenses([])
     loadDashboard()
@@ -152,6 +157,7 @@ export function SharedDashboard() {
         expenses={expenses}
         isLoading={isLoading}
         onEndReached={loadNextExpenses}
+        onColumnPress={handleSortTable}
       />
       <Fab
         renderInPortal={false}

@@ -29,10 +29,7 @@ export const THEME = extendTheme({
       500: '#666360',
       300: '#969CB3'
     },
-    pink: {
-      700: '#E83F5B',
-      200: '#FDDEDE'
-    }
+    pink: { 200: '#FDDEDE' }
   },
   fonts: {
     heading: 'Roboto_900Black',

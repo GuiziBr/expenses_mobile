@@ -30,5 +30,5 @@ export type FormattedExpense = {
   bank?: string
   store?: string
   dueDate: Date
-  formattedDueDate?: string | null
+  formattedDueDate: string
 }

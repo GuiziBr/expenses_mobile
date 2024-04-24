@@ -106,10 +106,9 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Fi
     <Modal
       isOpen={isVisible}
       onClose={handleOnClose}
-      _overlay={{ style: { backgroundColor: 'rgba(0, 0, 0, 0.6)' }}}
       bottom={4}
     >
-      <Modal.Content maxWidth="450px" maxH={'320'}>
+      <Modal.Content maxWidth='450px' maxH='320'>
         <Modal.CloseButton/>
         <Modal.Header
           bg={'blue.600'}
