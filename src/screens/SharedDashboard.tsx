@@ -19,13 +19,15 @@ import { useCallback, useState } from 'react'
 
 export function SharedDashboard() {
   const endOfMonthDate = format(endOfMonth(new Date()), 'yyyy-MM-dd')
-  const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
+  // const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
+  const startOfMonthDate = format(startOfMonth('2024-04-01'), 'yyyy-MM-dd')
 
   const [isLoading, setIsLoading] = useState(false)
   const [isBalanceLoading, setIsBalanceLoading] = useState(false)
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [isFilterVisible, setIsFilterVisible] = useState(false)
+  const [currentFilters, setCurrentFilter] = useState<Filters>({} as Filters)
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
@@ -43,7 +45,7 @@ export function SharedDashboard() {
             filterValue: filters.filterValue
           },
           offset: isInitialLoad ? 0 : expenses.length,
-          limit: 20,
+          limit: 10,
         },
       }
       const { data, headers } = await api.get('/expenses/shared', config)
@@ -94,8 +96,8 @@ export function SharedDashboard() {
   }
 
   async function loadNextExpenses() {
-    if(isLoading || expenses.length === totalCount) return
-    await loadExpenses(false)
+    if(isLoading || totalCount === expenses.length) return
+    await loadExpenses(false, currentFilters)
   }
 
   async function handleFilterTable(selectedFilters: Filters): Promise<void> {
@@ -103,11 +105,12 @@ export function SharedDashboard() {
       loadExpenses(true, selectedFilters),
       getBalance(selectedFilters),
     ])
+    setCurrentFilter(selectedFilters)
   }
 
-  function handleSortTable(columnName: string): void {
-    console.log('sortBy', columnName)
-  }
+  // function handleSortTable(columnName: string): void {
+  //   console.log('sortBy', columnName)
+  // }
 
 
   useFocusEffect(useCallback(() => {
@@ -157,7 +160,6 @@ export function SharedDashboard() {
         expenses={expenses}
         isLoading={isLoading}
         onEndReached={loadNextExpenses}
-        onColumnPress={handleSortTable}
       />
       <Fab
         renderInPortal={false}

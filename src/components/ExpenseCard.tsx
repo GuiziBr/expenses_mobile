@@ -5,12 +5,13 @@ import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
 type Props = TouchableOpacityProps & {
   expense: FormattedExpense
+  openExpenseModal: (expense: FormattedExpense) => void
 }
 
+export function ExpenseCard({ openExpenseModal, expense, ...rest }: Props) {
 
-export function ExpenseCard({ expense, ...rest }: Props) {
   return (
-    <TouchableOpacity {...rest} >
+    <TouchableOpacity onPress={() => openExpenseModal(expense)} { ...rest} >
       <HStack
         bg="white.100"
         mb={'.5'}
@@ -28,7 +29,7 @@ export function ExpenseCard({ expense, ...rest }: Props) {
         >
           <Text numberOfLines={1} fontSize="20">{expense.description}</Text>
           <Text fontSize="18" color={'gray.300'}>{expense.category}</Text>
-          <Text fontSize="18" color={'gray.300'}>{expense.formattedDueDate}</Text>
+          <Text fontSize="18" color={'gray.300'}>{expense.formattedDate}</Text>
         </Center>
 
         <Center

@@ -2,18 +2,21 @@ import { AntDesign } from '@expo/vector-icons'
 import { FlatList, Icon, Pressable, Text } from 'native-base'
 
 type ExpenseTableHeaderProps = {
-  content: Array<string>
-  onPress: (item: string) => void
+  content: {
+    id: string
+    description: string
+  }[]
+  onColumnPress: (item: string) => void
 }
 
-export function ExpenseTableHeader({ content, onPress }: ExpenseTableHeaderProps) {
+export function ExpenseTableHeader({ content, onColumnPress }: ExpenseTableHeaderProps) {
   return (
     <FlatList
       data={content}
-      keyExtractor={item => item}
+      keyExtractor={item => item.id}
       renderItem={({ item }) => (
         <Pressable
-          onPress={() => onPress(item)}
+          onPress={() => onColumnPress(item.id)}
           overflow="hidden"
           flexDirection="row"
           alignItems="center"
@@ -25,7 +28,7 @@ export function ExpenseTableHeader({ content, onPress }: ExpenseTableHeaderProps
             fontSize="md"
             textTransform="uppercase"
           >
-            {item}
+            {item.description}
           </Text>
           <Icon
             as={AntDesign}

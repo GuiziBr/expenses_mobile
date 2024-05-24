@@ -1,9 +1,9 @@
-export const formatDate = (date: Date, isDesktop = true): string => {
+export const formatDate = (date: Date, day?: boolean): string => {
   const options: Intl.DateTimeFormatOptions = {
     timeZone: 'UTC',
-    day: '2-digit',
+    ...day && { day: '2-digit' },
     month: '2-digit',
-    ...isDesktop && { year: 'numeric' },
+    year: 'numeric'
   }
   return new Date(date).toLocaleDateString('en-US', options)
 }

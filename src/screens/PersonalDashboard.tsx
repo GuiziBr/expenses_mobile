@@ -4,7 +4,7 @@ import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
 import { Filters } from '@contexts/ExpenseContext'
 import { OrderTypes } from '@dtos/DashboardDTO'
-import { FormattedExpense, OrderByTypes } from '@dtos/ExpenseDTO'
+import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
@@ -28,9 +28,10 @@ export function PersonalDashboard() {
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [isFilterVisible, setIsFilterVisible] = useState(false)
-  const [orderByColumns, setOrderByColumns] = useState<OrderByTypes[]>(
-    constants.tableHeader.map(column => ({ orderBy: column.description, orderType: 'asc', isCurrent: false }))
-  )
+  const [currentFilters, setCurrentFilter] = useState<Filters>({} as Filters)
+  // const [orderByColumns, setOrderByColumns] = useState<OrderByTypes[]>(
+  //   constants.tableHeader.map(column => ({ orderBy: column.description, orderType: 'asc', isCurrent: false }))
+  // )
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
@@ -100,8 +101,8 @@ export function PersonalDashboard() {
   }
 
   async function loadNextExpenses(): Promise<void> {
-    if(isLoading || expenses.length === totalCount) return
-    await loadExpenses(false)
+    if(isLoading || totalCount === expenses.length) return
+    await loadExpenses(false, currentFilters)
   }
 
   async function handleFilterTable(selectedFilters: Filters): Promise<void> {
@@ -109,17 +110,18 @@ export function PersonalDashboard() {
       loadExpenses(true, selectedFilters),
       getBalance(selectedFilters),
     ])
+    setCurrentFilter(selectedFilters)
   }
 
-  function getOrderByType(columnName: string): 'asc' | 'desc' {
-    const currentOrder = orderByColumns.find((orderByColumn) => orderByColumn.orderBy === columnName)
-    return currentOrder?.orderBy === 'asc' ? 'desc' : 'asc'
+  // function getOrderByType(columnName: string): 'asc' | 'desc' {
+  //   const currentOrder = orderByColumns.find((orderByColumn) => orderByColumn.orderBy === columnName)
+  //   return currentOrder?.orderBy === 'asc' ? 'desc' : 'asc'
 
-  }
+  // }
 
-  async function handleSortTable(columnName: string): Promise<void> {
-    const orderParams: OrderTypes = { orderBy: columnName, orderType: getOrderByType(columnName) }
-  }
+  // async function handleSortTable(columnName: string): Promise<void> {
+  //   const orderParams: OrderTypes = { orderBy: columnName, orderType: getOrderByType(columnName) }
+  // }
 
   useFocusEffect(useCallback(() => {
     setExpenses([])
@@ -129,7 +131,7 @@ export function PersonalDashboard() {
   return (
     <VStack flex={1}>
       <HomeHeader/>
-      <HStack justifyContent="space-evenly" mt="-10" mb={5}>
+      <HStack justifyContent="space-evenly" mt={-10} mb={2}>
         <BalanceCard
           cardTitle="Balance"
           cardText={formatAmount(balance.personalBalance)}

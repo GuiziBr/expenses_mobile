@@ -23,4 +23,18 @@ export default {
     banks: 'bank',
     stores: 'store',
   },
+  tableHeader: [
+    {
+      id: 'expense',
+      description: 'Expense',
+    },
+    {
+      id: 'category',
+      description: 'Category',
+    },
+    {
+      id: 'amount',
+      description: 'Amount',
+    }
+  ]
 }
