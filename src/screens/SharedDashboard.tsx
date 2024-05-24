@@ -19,8 +19,7 @@ import { useCallback, useState } from 'react'
 
 export function SharedDashboard() {
   const endOfMonthDate = format(endOfMonth(new Date()), 'yyyy-MM-dd')
-  // const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
-  const startOfMonthDate = format(startOfMonth('2024-04-01'), 'yyyy-MM-dd')
+  const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
 
   const [isLoading, setIsLoading] = useState(false)
   const [isBalanceLoading, setIsBalanceLoading] = useState(false)
