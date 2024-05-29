@@ -161,12 +161,14 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Fi
                 onChange={(_, date) => handleOnChangeDate('startDate', date)}
                 maximumDate={maxStartDate}
                 accentColor='#FF9000'
+                themeVariant='dark'
               />
               <DateTimePicker
                 value={currentFilters.endDate}
                 onChange={(_, date) =>  handleOnChangeDate('endDate', date)}
                 minimumDate={minEndDate}
                 accentColor='#FF9000'
+                themeVariant='dark'
               />
             </HStack>
             <Button

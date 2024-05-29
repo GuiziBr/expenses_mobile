@@ -1,45 +1,24 @@
-import { FlatList, HStack, VStack, Text } from 'native-base'
+import { BalanceReport } from '@dtos/ReportDTO'
+import { formatAmount } from '@utils/formatAmount'
+import { FlatList, HStack, Text, VStack } from 'native-base'
 import { BalanceCard } from './BalanceCard'
 
-const ITEMS = [
-  {
-    description: 'Grocery',
-    total: '$93.33'
-  },
-  {
-    description: 'Restaurant',
-    total: '$141.42'
-  },
-  {
-    description: 'Fuel',
-    total: '$40.36'
-  },
-  {
-    description: 'Others',
-    total: '$10.37'
-  },
-  {
-    description: 'Pharmacy',
-    total: '$19.48'
-  },
-  {
-    description: 'Parking',
-    total: '$3.30'
-  },
-]
+type BalanceTableProps = {
+  balanceReport: BalanceReport
+}
 
-export function BalanceTable() {
+export function BalanceTable({ balanceReport }: BalanceTableProps) {
   return (
     <HStack px={2} justifyContent={'space-evenly'}>
       <VStack space={2} alignItems={'center'}>
         <Text color={'white.100'} fontSize={'md'}>Ricardo</Text>
         <FlatList
-          data={ITEMS}
+          data={balanceReport?.requester?.categories}
           keyExtractor={item => item.description}
           renderItem={({ item }) => (
             <BalanceCard
               cardTitle={item.description}
-              cardText={item.total}
+              cardText={formatAmount(item.total)}
               cardBackgroundColor="white.100"
               fontTextColor="green"
               headingTextColor="blue.800"
@@ -54,12 +33,12 @@ export function BalanceTable() {
       <VStack space={2} alignItems={'center'}>
         <Text color={'white.100'} fontSize={'md'}>Julia</Text>
         <FlatList
-          data={ITEMS}
+          data={balanceReport?.partner?.categories}
           keyExtractor={item => item.description}
           renderItem={({ item }) => (
             <BalanceCard
               cardTitle={item.description}
-              cardText={item.total}
+              cardText={formatAmount(item.total)}
               cardBackgroundColor="white.100"
               fontTextColor="red.500"
               headingTextColor="blue.800"
