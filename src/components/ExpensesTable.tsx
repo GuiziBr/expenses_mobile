@@ -34,7 +34,7 @@ export function ExpensesTable({ expenses, onEndReached, isLoading }: ExpenseTabl
             onEndReached={onEndReached}
             onEndReachedThreshold={.2}
           />
-          {currentExpense && (
+          {!!currentExpense && (
             <ExpenseDetailsModal
               isVisible={isModalVisible}
               onClose={() => setIsModalVisible(false)}

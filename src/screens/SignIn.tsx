@@ -80,7 +80,6 @@ export function SignIn() {
                 />
               )}
             />
-
             <Controller
               control={control}
               name='password'
@@ -100,12 +99,11 @@ export function SignIn() {
               title='Login'
               onPress={handleSubmit(handleSignIn)}
               isLoading={isLoading}
+              mt={1}
             />
           </Center>
         </VStack>
       </ScrollView>
-
     </KeyboardAvoidingView>
-
   )
 }

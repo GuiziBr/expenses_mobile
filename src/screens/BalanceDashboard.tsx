@@ -2,14 +2,14 @@ import { BalanceCard } from '@components/BalanceCard'
 import { BalanceTable } from '@components/BalanceTable'
 import { Button } from '@components/Button'
 import { HomeHeader } from '@components/HomeHeader'
-import { BalanceReport } from '@dtos/ReportDTO'
-import { Entypo, FontAwesome6 } from '@expo/vector-icons'
+import { BalanceReport } from '@dtos/DashboardDTO'
+import { Entypo, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
 import { AppError } from '@utils/AppError'
 import { formatAmount } from '@utils/formatAmount'
-import { FormControl, HStack, VStack, useToast } from 'native-base'
+import { Fab, FormControl, HStack, Icon, VStack, useToast } from 'native-base'
 import { useCallback, useState } from 'react'
 
 export function BalanceDashboard() {
@@ -105,6 +105,20 @@ export function BalanceDashboard() {
         </HStack>
       </FormControl>
       <BalanceTable balanceReport={balanceReport}/>
+      <Fab
+        renderInPortal={false}
+        placement='bottom-right'
+        size={16}
+        bg={'orange.700'}
+        icon={<Icon as={Ionicons} name="add" size="2xl" color="white.100"/>}
+        _pressed={{ bg: 'blue.800' }}
+        rounded={'2xl'}
+        style={{
+          width: 60,
+          height: 60,
+        }}
+        // onPress={() => setIsFilterVisible(true)}
+      />
     </VStack>
   )
 }

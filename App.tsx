@@ -15,6 +15,9 @@ export default function App() {
   useEffect(() => {
     LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.'])
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+    LogBox.ignoreLogs([
+      'We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues'
+    ])
   }, [])
 
   return (

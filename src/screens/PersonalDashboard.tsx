@@ -2,10 +2,10 @@ import { BalanceCard } from '@components/BalanceCard'
 import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
-import { Filters } from '@contexts/ExpenseContext'
-import { OrderTypes } from '@dtos/DashboardDTO'
+import { NewExpenseModal } from '@components/NewExpenseModal'
+import { Filters, OrderTypes } from '@dtos/DashboardDTO'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
-import { Feather, FontAwesome6 } from '@expo/vector-icons'
+import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
@@ -22,12 +22,13 @@ export function PersonalDashboard() {
   const endOfMonthDate = format(endOfMonth(new Date()), 'yyyy-MM-dd')
   const startOfMonthDate = format(startOfMonth(new Date()), 'yyyy-MM-dd')
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [isBalanceLoading, setIsBalanceLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isBalanceLoading, setIsBalanceLoading] = useState<boolean>(false)
+  const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false)
+  const [isNewExpenseVisible, setIsNewExpenseVisible] = useState<boolean>(false)
 
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
-  const [isFilterVisible, setIsFilterVisible] = useState(false)
   const [currentFilters, setCurrentFilter] = useState<Filters>({} as Filters)
   // const [orderByColumns, setOrderByColumns] = useState<OrderByTypes[]>(
   //   constants.tableHeader.map(column => ({ orderBy: column.description, orderType: 'asc', isCurrent: false }))
@@ -152,11 +153,34 @@ export function PersonalDashboard() {
       <Fab
         renderInPortal={false}
         placement='bottom-right'
+        size={12}
+        bg={'blue.800'}
+        icon={<Icon as={Feather} name="filter" size="sm" color="white.100"/>}
+        _pressed={{ bg: 'orange.700' }}
+        onPress={() => setIsFilterVisible(true)}
+        bottom={5}
+        mb={1}
+        right={90}
+        shadow={2}
+        rounded={'lg'}
+        style={{
+          width: 40,
+          height: 40,
+        }}
+      />
+      <Fab
+        renderInPortal={false}
+        placement='bottom-right'
         size={16}
         bg={'orange.700'}
-        icon={<Icon as={Feather} name="menu" size="lg" color="white.100"/>}
+        icon={<Icon as={Ionicons} name="add" size="2xl" color="white.100"/>}
         _pressed={{ bg: 'blue.800' }}
-        onPress={() => setIsFilterVisible(true)}
+        rounded={'2xl'}
+        style={{
+          width: 60,
+          height: 60,
+        }}
+        onPress={() => setIsNewExpenseVisible(true)}
       />
       <ExpensesFilterModal
         isVisible={isFilterVisible}
@@ -164,6 +188,12 @@ export function PersonalDashboard() {
         onSubmit={handleFilterTable}
         title='Personal Expenses'
       />
+      {isNewExpenseVisible && (
+        <NewExpenseModal
+          isVisible={isNewExpenseVisible}
+          onClose={() => setIsNewExpenseVisible(false)}
+        />
+      )}
     </VStack>
   )
 }

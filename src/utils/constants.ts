@@ -36,5 +36,9 @@ export default {
       id: 'amount',
       description: 'Amount',
     }
+  ],
+  expenseRadioBox: [
+    { value: 'personal', label: 'Personal' },
+    { value: 'split', label: 'Split' },
   ]
 }

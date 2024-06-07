@@ -1,23 +1,10 @@
+import { Filters } from '@dtos/DashboardDTO'
+import { BalanceState } from '@dtos/ExpenseDTO'
 import { api } from '@services/api'
 import constants from '@utils/constants'
 import { AxiosRequestConfig } from 'axios'
 import { format } from 'date-fns'
 import { ReactNode, createContext, useCallback, useState } from 'react'
-type BalanceState = {
-  personalBalance: number
-  sharedBalance: {
-    total: number
-    paying: number
-    payed: number
-  }
-}
-
-export type Filters = {
-  startDate?: string
-  endDate?: string
-  filterBy?: string
-  filterValue?: string
-}
 
 type ExpenseContextProviderProps = {
   children: ReactNode

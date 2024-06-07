@@ -7,8 +7,8 @@ type InputProps = IInputProps & {
   errorMessage?: string | null
 }
 
-
 export function Input({ errorMessage, isInvalid, icon, iconName,...rest }: InputProps) {
+
   const invalid = !!errorMessage || isInvalid
 
   const [isFocused, setIsFocused] = useState(false)
@@ -22,31 +22,33 @@ export function Input({ errorMessage, isInvalid, icon, iconName,...rest }: Input
   },[])
 
   return (
-    <FormControl isInvalid={invalid}>
+    <FormControl>
       <HStack
         bg={'blue.700'}
         h={16}
         px={4}
-        mb={4}
+        mb={2}
         borderRadius={'sm'}
         alignItems={'center'}
+        {...invalid && { borderColor: 'red.700', borderWidth: 1 }}
         {...isFocused && { borderColor: 'orange.700', borderWidth: 1 }}
-
+        display={'flex'}
+        justifyContent={'center'}
       >
-        {icon &&
-        <Icon
-          as={icon}
-          {...isFocused && { color: 'orange.700' }}
-          size={'md'}
-          name={iconName}
-        />
-        }
+        {icon && (
+          <Icon
+            as={icon}
+            {...isFocused && { color: 'orange.700' }}
+            size={'md'}
+            name={iconName}
+          />
+        )}
 
         <NativeBaseInput
           flex={1}
           borderWidth={0}
           fontSize={'md'}
-          color='white.200'
+          color='orange.700'
           fontFamily={'body'}
           placeholderTextColor={'gray.500'}
           onFocus={handleInputFocus}
@@ -54,11 +56,6 @@ export function Input({ errorMessage, isInvalid, icon, iconName,...rest }: Input
           _focus={{ bg: 'blue.700' }}
           {...rest}
         />
-
-        <FormControl.ErrorMessage _text={{ color: 'red.700' }}>
-          {errorMessage}
-        </FormControl.ErrorMessage>
-
       </HStack>
     </FormControl>
   )

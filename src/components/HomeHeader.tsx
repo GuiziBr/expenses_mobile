@@ -1,8 +1,8 @@
-import { HStack, Heading, Icon, Text, VStack } from 'native-base'
-import { UserAvatar } from './UserAvatar'
 import { MaterialIcons } from '@expo/vector-icons'
-import { TouchableOpacity } from 'react-native'
 import { useAuth } from '@hooks/useAuth'
+import { HStack, Heading, Icon, Text, VStack } from 'native-base'
+import { TouchableOpacity } from 'react-native'
+import { UserAvatar } from './UserAvatar'
 
 export function HomeHeader() {
   const { user, signOut } = useAuth()

@@ -1,12 +1,12 @@
 import { Button as ButtonNativeBase, IButtonProps, Text } from 'native-base'
 
-type Props = IButtonProps & {
+type ButtonProps = IButtonProps & {
   title: string
   isLoading?: boolean
   isLoadingText?: string
 }
 
-export function Button({ title, isLoading, isLoadingText,...rest }: Props) {
+export function Button({ title, isLoading, isLoadingText,...rest }: ButtonProps) {
   return (
     <ButtonNativeBase
       w={'full'}

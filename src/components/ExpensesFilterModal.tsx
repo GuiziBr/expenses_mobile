@@ -1,32 +1,27 @@
-import { Filters } from '@contexts/ExpenseContext'
-import { FilterValue } from '@dtos/DashboardDTO'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { FilterValues, Filters } from '@dtos/DashboardDTO'
+import { Entypo, MaterialIcons, } from '@expo/vector-icons'
 import { api } from '@services/api'
 import constants from '@utils/constants'
 import { endOfMonth, format, startOfMonth } from 'date-fns'
-import { FormControl, HStack, Modal, Select } from 'native-base'
+import { FormControl, HStack, Modal } from 'native-base'
 import { useState } from 'react'
 import { Button } from './Button'
+import { DateField } from './Date'
+import { Select } from './Select'
 
 type CurrentFilters = Omit<Filters, 'startDate' | 'endDate'> & {
   startDate: Date
   endDate: Date
 }
 
-type FilterModalProps = {
+type ExpensesFilterModalProps = {
   isVisible: boolean
   onClose: () => void
   onSubmit: (filters: Filters) => Promise<void>
   title: string
 }
 
-type FilterValues = {
-  id: string
-  description: string
-  name: string
-}
-
-export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: FilterModalProps) {
+export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: ExpensesFilterModalProps) {
   const initialFilter = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
@@ -39,11 +34,11 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Fi
   const [minEndDate, setMinEndDate] = useState<Date>()
   const [isLoading, setIsLoading] = useState(false)
 
-  const sortList = (data: FilterValue[], field: keyof FilterValue): FilterValues[] => data.sort(
+  const sortList = (data: FilterValues[], field: keyof FilterValues): FilterValues[] => data.sort(
     (a, b) => ((a[field]) > (b[field]) ? 1 : -1)
   )
 
-  async function loadFilterValues (selectedFilter: string): Promise<FilterValue[]> {
+  async function loadFilterValues (selectedFilter: string): Promise<FilterValues[]> {
     const { data } = await api.get(`/${selectedFilter}`)
     return data
   }
@@ -56,7 +51,7 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Fi
     }
     setCurrentFilters({ ...currentFilters, filterBy })
     const filterValues = await loadFilterValues(filterBy)
-    const sortingKey = Object.keys(filterValues[0])[1] as keyof FilterValue
+    const sortingKey = Object.keys(filterValues[0])[1] as keyof FilterValues
     setFilterValues(sortList(filterValues, sortingKey))
   }
 
@@ -108,69 +103,56 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Fi
       onClose={handleOnClose}
       bottom={4}
     >
-      <Modal.Content maxWidth='450px' maxH='320'>
-        <Modal.CloseButton/>
-        <Modal.Header
-          bg={'blue.600'}
-          borderBottomWidth={0}
-          _text={{ color: 'white.100', textAlign: 'center', fontSize: '2xl' }}
-        >
-          {title}
-        </Modal.Header>
-        <Modal.Body bg={'blue.600'} _scrollview={{ scrollEnabled: false }} minH={210}>
+      <Modal.Content maxWidth='450px' maxH='550'>
+        <HStack display={'flex'} alignItems={'center'} justifyContent={'center'} bg="blue.600">
+          <Modal.CloseButton mt={1} />
+          <Modal.Header
+            bg="blue.600"
+            borderBottomWidth={0}
+            pb={0}
+            _text={{ color: 'white.100', textAlign: 'center', fontSize: '2xl' }}
+          >
+            {title}
+          </Modal.Header>
+        </HStack>
+        <Modal.Body bg={'blue.600'} _scrollview={{ scrollEnabled: false }} minH={300}>
           <FormControl isRequired>
             <Select
+              onChange={item => handleSelectFilter(item)}
+              options={constants.columnFilters}
               placeholder='Filter By'
-              onValueChange={item => handleSelectFilter(item)}
-              selectedValue={currentFilters.filterBy}
-              h={12}
-              placeholderTextColor={'white.100'}
-              mb={4}
-              color={'orange.700'}
-            >
-              {constants.columnFilters.map(filter => (
-                <Select.Item
-                  key={filter.id}
-                  value={filter.id}
-                  label={filter.description}
-                />
-              ))}
-            </Select>
-            {currentFilters.filterBy && (
+              value={currentFilters.filterBy}
+              icon={Entypo}
+              iconName='select-arrows'
+            />
+            {!!currentFilters.filterBy && (
               <Select
                 placeholder='Filter value'
-                h={12}
-                placeholderTextColor={'white.100'}
-                mb={4}
-                selectedValue={currentFilters.filterValue}
-                color={'orange.700'}
-                onValueChange={item => handleSelectFilterValue(item)}
-              >
-                {filterValues.map(filter => (
-                  <Select.Item
-                    key={filter.id}
-                    value={filter.id}
-                    label={filter.description || filter.name}
-                  />
-                ))}
-              </Select>
+                onChange={item => handleSelectFilterValue(item)}
+                options={filterValues}
+                value={currentFilters.filterValue}
+                icon={Entypo}
+                iconName='select-arrows'
+              />
             )}
-            <HStack mb={4}>
-              <DateTimePicker
-                value={currentFilters.startDate}
-                onChange={(_, date) => handleOnChangeDate('startDate', date)}
-                maximumDate={maxStartDate}
-                accentColor='#FF9000'
-                themeVariant='dark'
-              />
-              <DateTimePicker
-                value={currentFilters.endDate}
-                onChange={(_, date) =>  handleOnChangeDate('endDate', date)}
-                minimumDate={minEndDate}
-                accentColor='#FF9000'
-                themeVariant='dark'
-              />
-            </HStack>
+            <DateField
+              currentDate={currentFilters.startDate}
+              setCurrentDate={date => handleOnChangeDate('startDate', date)}
+              value={currentFilters.startDate}
+              onChangeDate={date => handleOnChangeDate('startDate', date as Date)}
+              icon={MaterialIcons}
+              iconName={'date-range'}
+              maximumDate={maxStartDate}
+            />
+            <DateField
+              currentDate={currentFilters.endDate}
+              setCurrentDate={date => handleOnChangeDate('endDate', date)}
+              value={currentFilters.endDate}
+              onChangeDate={date => handleOnChangeDate('endDate', date as Date)}
+              icon={MaterialIcons}
+              iconName={'date-range'}
+              minimumDate={minEndDate}
+            />
             <Button
               title='Filter'
               disabled={isLoading}

@@ -32,3 +32,32 @@ export type FormattedExpense = {
   dueDate: Date
   formattedDueDate: string
 }
+
+export type Category = {
+  id: string
+  description: string
+}
+
+export type PaymentType = {
+  id: string
+  description: string
+}
+
+export type Bank = {
+  id: string
+  name: string
+}
+
+export type Store = {
+  id: string
+  name: string
+}
+
+export type BalanceState = {
+  personalBalance: number
+  sharedBalance: {
+    total: number
+    paying: number
+    payed: number
+  }
+}

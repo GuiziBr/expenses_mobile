@@ -3,12 +3,12 @@ import { AntDesign } from '@expo/vector-icons'
 import { Center, HStack, Icon, Text } from 'native-base'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
-type Props = TouchableOpacityProps & {
+type ExpenseCardProps = TouchableOpacityProps & {
   expense: FormattedExpense
   openExpenseModal: (expense: FormattedExpense) => void
 }
 
-export function ExpenseCard({ openExpenseModal, expense, ...rest }: Props) {
+export function ExpenseCard({ openExpenseModal, expense, ...rest }: ExpenseCardProps) {
 
   return (
     <TouchableOpacity onPress={() => openExpenseModal(expense)} { ...rest} >

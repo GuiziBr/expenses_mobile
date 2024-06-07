@@ -2,9 +2,9 @@ import { BalanceCard } from '@components/BalanceCard'
 import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
-import { Filters } from '@contexts/ExpenseContext'
+import { Filters } from '@dtos/DashboardDTO'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
-import { Entypo, Feather, FontAwesome6 } from '@expo/vector-icons'
+import { Entypo, Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
 import { useFocusEffect } from '@react-navigation/native'
 import { api } from '@services/api'
@@ -163,11 +163,34 @@ export function SharedDashboard() {
       <Fab
         renderInPortal={false}
         placement='bottom-right'
+        size={12}
+        bg={'blue.800'}
+        icon={<Icon as={Feather} name="filter" size="sm" color="white.100"/>}
+        _pressed={{ bg: 'orange.700' }}
+        onPress={() => setIsFilterVisible(true)}
+        bottom={5}
+        mb={1}
+        right={90}
+        shadow={2}
+        rounded={'lg'}
+        style={{
+          width: 40,
+          height: 40,
+        }}
+      />
+      <Fab
+        renderInPortal={false}
+        placement='bottom-right'
         size={16}
         bg={'orange.700'}
-        icon={<Icon as={Feather} name="menu" size="lg" color="white.100"/>}
+        icon={<Icon as={Ionicons} name="add" size="2xl" color="white.100"/>}
         _pressed={{ bg: 'blue.800' }}
-        onPress={() => setIsFilterVisible(true)}
+        rounded={'2xl'}
+        style={{
+          width: 60,
+          height: 60,
+        }}
+        // onPress={() => setIsFilterVisible(true)}
       />
       <ExpensesFilterModal
         isVisible={isFilterVisible}

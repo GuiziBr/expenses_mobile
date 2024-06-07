@@ -1,6 +1,7 @@
 import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { HStack, Icon, Modal, Text, VStack } from 'native-base'
+
 type ExpenseDetailsModalProps = {
   expense: FormattedExpense
   onClose: () => void
