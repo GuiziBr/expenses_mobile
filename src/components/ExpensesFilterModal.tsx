@@ -30,7 +30,7 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Ex
 
   const [filterValues, setFilterValues] = useState<FilterValues[]>([])
   const [currentFilters, setCurrentFilters] = useState<CurrentFilters>(initialFilter)
-  const [maxStartDate, setMaxStartDate] = useState<Date>()
+  const [maxStartDate, setMaxStartDate] = useState<Date>(new Date())
   const [minEndDate, setMinEndDate] = useState<Date>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -143,6 +143,7 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Ex
               icon={MaterialIcons}
               iconName={'date-range'}
               maximumDate={maxStartDate}
+
             />
             <DateField
               currentDate={currentFilters.endDate}

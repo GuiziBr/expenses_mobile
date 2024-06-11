@@ -55,7 +55,7 @@ export function DateField({
           accentColor='#FF9000'
           themeVariant='dark'
           textColor='#FF9000'
-          maximumDate={maximumDate || new Date()}
+          maximumDate={maximumDate}
           minimumDate={minimumDate}
           style={customStyles}
         />

@@ -1,4 +1,4 @@
-import { BalanceReport } from '@dtos/ReportDTO'
+import { BalanceReport } from '@dtos/DashboardDTO'
 import { formatAmount } from '@utils/formatAmount'
 import { FlatList, HStack, Text, VStack } from 'native-base'
 import { BalanceCard } from './BalanceCard'

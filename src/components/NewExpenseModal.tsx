@@ -5,7 +5,7 @@ import { api } from '@services/api'
 import { AppError } from '@utils/AppError'
 import constants from '@utils/constants'
 import { formatCurrency, unformatAmount } from '@utils/formatAmount'
-import { format } from 'date-fns'
+import { format, getYear } from 'date-fns'
 import { HStack, KeyboardAvoidingView, Modal, useToast } from 'native-base'
 import { useCallback, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ type FormData = {
 
 type NewExpenseModalProps = {
   isVisible: boolean
-  onClose: () => void
+  onClose: (shouldLoadExpenses?: boolean) => void
 }
 
 export function NewExpenseModal({ isVisible, onClose }: NewExpenseModalProps) {
@@ -126,6 +126,12 @@ export function NewExpenseModal({ isVisible, onClose }: NewExpenseModalProps) {
 
       await api.post('/expenses', payload)
 
+      toast.show({
+        title: 'Expense created successfully.',
+        placement: 'top',
+        bgColor: 'green.500'
+      })
+
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Error creating expense. Try again.'
@@ -137,7 +143,7 @@ export function NewExpenseModal({ isVisible, onClose }: NewExpenseModalProps) {
       })
     } finally {
       setIsLoading(false)
-      onClose()
+      onClose(true)
     }
 
   }
@@ -264,6 +270,8 @@ export function NewExpenseModal({ isVisible, onClose }: NewExpenseModalProps) {
                   icon={MaterialIcons}
                   iconName={'date-range'}
                   value={value}
+                  maximumDate={new Date()}
+                  minimumDate={new Date(getYear(new Date()),0,1)}
                 />
               )}
             />

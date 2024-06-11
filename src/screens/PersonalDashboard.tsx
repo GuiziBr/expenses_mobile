@@ -3,7 +3,7 @@ import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
 import { NewExpenseModal } from '@components/NewExpenseModal'
-import { Filters, OrderTypes } from '@dtos/DashboardDTO'
+import { Filters } from '@dtos/DashboardDTO'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { useExpense } from '@hooks/useExpense'
@@ -30,14 +30,11 @@ export function PersonalDashboard() {
   const [expenses, setExpenses] = useState<FormattedExpense[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [currentFilters, setCurrentFilter] = useState<Filters>({} as Filters)
-  // const [orderByColumns, setOrderByColumns] = useState<OrderByTypes[]>(
-  //   constants.tableHeader.map(column => ({ orderBy: column.description, orderType: 'asc', isCurrent: false }))
-  // )
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
 
-  async function loadExpenses(isInitialLoad?: boolean, filters?: Filters, orderParams?: OrderTypes): Promise<void> {
+  async function loadExpenses(isInitialLoad?: boolean, filters?: Filters): Promise<void> {
     try {
       setIsLoading(true)
 
@@ -49,7 +46,8 @@ export function PersonalDashboard() {
             filterBy: constants.filterValues[filters.filterBy as keyof typeof constants.filterValues],
             filterValue: filters.filterValue
           },
-          ...orderParams && { ...orderParams },
+          orderBy: 'due_date',
+          orderType:'desc',
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 20,
         },
@@ -114,15 +112,15 @@ export function PersonalDashboard() {
     setCurrentFilter(selectedFilters)
   }
 
-  // function getOrderByType(columnName: string): 'asc' | 'desc' {
-  //   const currentOrder = orderByColumns.find((orderByColumn) => orderByColumn.orderBy === columnName)
-  //   return currentOrder?.orderBy === 'asc' ? 'desc' : 'asc'
-
-  // }
-
-  // async function handleSortTable(columnName: string): Promise<void> {
-  //   const orderParams: OrderTypes = { orderBy: columnName, orderType: getOrderByType(columnName) }
-  // }
+  async function handleCloseModal(shouldLoadExpenses?: boolean): Promise<void> {
+    setIsNewExpenseVisible(false)
+    if(shouldLoadExpenses) {
+      await Promise.all([
+        loadExpenses(false, currentFilters),
+        getBalance(currentFilters)
+      ])
+    }
+  }
 
   useFocusEffect(useCallback(() => {
     setExpenses([])
@@ -132,7 +130,7 @@ export function PersonalDashboard() {
   return (
     <VStack flex={1}>
       <HomeHeader/>
-      <HStack justifyContent="space-evenly" mt={-10} mb={2}>
+      <HStack justifyContent="space-evenly" mt={-10} mb={-10} zIndex={1}>
         <BalanceCard
           cardTitle="Balance"
           cardText={formatAmount(balance.personalBalance)}
@@ -191,7 +189,7 @@ export function PersonalDashboard() {
       {isNewExpenseVisible && (
         <NewExpenseModal
           isVisible={isNewExpenseVisible}
-          onClose={() => setIsNewExpenseVisible(false)}
+          onClose={handleCloseModal}
         />
       )}
     </VStack>

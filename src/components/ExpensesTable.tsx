@@ -21,7 +21,7 @@ export function ExpensesTable({ expenses, onEndReached, isLoading }: ExpenseTabl
   }
 
   return (
-    <VStack flex={1}>
+    <VStack flex={1} backgroundColor={'blue.600'}>
       {expenses.length === 0 && isLoading ? <Loading /> : (
         <>
           <FlatList
@@ -33,6 +33,8 @@ export function ExpensesTable({ expenses, onEndReached, isLoading }: ExpenseTabl
             ListFooterComponent={() => isLoading && <Loading />}
             onEndReached={onEndReached}
             onEndReachedThreshold={.2}
+            showsVerticalScrollIndicator={false}
+
           />
           {!!currentExpense && (
             <ExpenseDetailsModal

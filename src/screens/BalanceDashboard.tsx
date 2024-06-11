@@ -2,6 +2,7 @@ import { BalanceCard } from '@components/BalanceCard'
 import { BalanceTable } from '@components/BalanceTable'
 import { Button } from '@components/Button'
 import { HomeHeader } from '@components/HomeHeader'
+import { NewExpenseModal } from '@components/NewExpenseModal'
 import { BalanceReport } from '@dtos/DashboardDTO'
 import { Entypo, FontAwesome6, Ionicons } from '@expo/vector-icons'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -16,6 +17,7 @@ export function BalanceDashboard() {
   const [isLoading, setIsLoading] = useState(false)
   const [balanceDate, setBalanceDate] = useState<Date>(new Date())
   const [balanceReport, setBalanceReport] = useState<BalanceReport>({} as BalanceReport)
+  const [isNewExpenseVisible, setIsNewExpenseVisible] = useState<boolean>(false)
 
   const toast = useToast()
 
@@ -43,6 +45,13 @@ export function BalanceDashboard() {
 
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  async function handleCloseModal(shouldLoadExpenses?: boolean): Promise<void> {
+    setIsNewExpenseVisible(false)
+    if(shouldLoadExpenses) {
+      await handleSubmit()
     }
   }
 
@@ -117,8 +126,14 @@ export function BalanceDashboard() {
           width: 60,
           height: 60,
         }}
-        // onPress={() => setIsFilterVisible(true)}
+        onPress={() => setIsNewExpenseVisible(true)}
       />
+      {isNewExpenseVisible && (
+        <NewExpenseModal
+          isVisible={isNewExpenseVisible}
+          onClose={handleCloseModal}
+        />
+      )}
     </VStack>
   )
 }

@@ -2,6 +2,7 @@ import { BalanceCard } from '@components/BalanceCard'
 import { ExpensesFilterModal } from '@components/ExpensesFilterModal'
 import { ExpensesTable } from '@components/ExpensesTable'
 import { HomeHeader } from '@components/HomeHeader'
+import { NewExpenseModal } from '@components/NewExpenseModal'
 import { Filters } from '@dtos/DashboardDTO'
 import { FormattedExpense } from '@dtos/ExpenseDTO'
 import { Entypo, Feather, FontAwesome6, Ionicons } from '@expo/vector-icons'
@@ -27,6 +28,7 @@ export function SharedDashboard() {
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [isFilterVisible, setIsFilterVisible] = useState(false)
   const [currentFilters, setCurrentFilter] = useState<Filters>({} as Filters)
+  const [isNewExpenseVisible, setIsNewExpenseVisible] = useState<boolean>(false)
 
   const { balance, getBalance } = useExpense()
   const toast = useToast()
@@ -43,6 +45,8 @@ export function SharedDashboard() {
             filterBy: constants.filterValues[filters.filterBy as keyof typeof constants.filterValues],
             filterValue: filters.filterValue
           },
+          orderBy: 'due_date',
+          orderType:'desc',
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 10,
         },
@@ -107,10 +111,15 @@ export function SharedDashboard() {
     setCurrentFilter(selectedFilters)
   }
 
-  // function handleSortTable(columnName: string): void {
-  //   console.log('sortBy', columnName)
-  // }
-
+  async function handleCloseModal(shouldLoadExpenses?: boolean): Promise<void> {
+    setIsNewExpenseVisible(false)
+    if(shouldLoadExpenses) {
+      await Promise.all([
+        loadExpenses(false, currentFilters),
+        getBalance(currentFilters)
+      ])
+    }
+  }
 
   useFocusEffect(useCallback(() => {
     setExpenses([])
@@ -190,7 +199,7 @@ export function SharedDashboard() {
           width: 60,
           height: 60,
         }}
-        // onPress={() => setIsFilterVisible(true)}
+        onPress={() => setIsNewExpenseVisible(true)}
       />
       <ExpensesFilterModal
         isVisible={isFilterVisible}
@@ -198,6 +207,12 @@ export function SharedDashboard() {
         onSubmit={handleFilterTable}
         title='Shared Expenses'
       />
+      {isNewExpenseVisible && (
+        <NewExpenseModal
+          isVisible={isNewExpenseVisible}
+          onClose={handleCloseModal}
+        />
+      )}
     </VStack>
 
   )

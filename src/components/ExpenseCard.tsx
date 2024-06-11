@@ -14,10 +14,12 @@ export function ExpenseCard({ openExpenseModal, expense, ...rest }: ExpenseCardP
     <TouchableOpacity onPress={() => openExpenseModal(expense)} { ...rest} >
       <HStack
         bg="white.100"
-        mb={'.5'}
         maxWidth={'100%'}
         display={'flex'}
         justifyContent={'space-between'}
+        backgroundColor={'blue.600'}
+        borderBottomWidth={.2}
+        borderBottomColor={'white.100'}
       >
 
         <Center
@@ -27,7 +29,7 @@ export function ExpenseCard({ openExpenseModal, expense, ...rest }: ExpenseCardP
           pt={4}
           pb={4}
         >
-          <Text numberOfLines={1} fontSize="20">{expense.description}</Text>
+          <Text numberOfLines={1} fontSize="20" color={'white.200'}>{expense.description}</Text>
           <Text fontSize="18" color={'gray.300'}>{expense.category}</Text>
           <Text fontSize="18" color={'gray.300'}>{expense.formattedDate}</Text>
         </Center>
@@ -50,6 +52,7 @@ export function ExpenseCard({ openExpenseModal, expense, ...rest }: ExpenseCardP
             name='right'
             size="6"
             ml={1}
+            color={'gray.300'}
           />
         </Center>
 
