@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expenses_mobile",
+    "name": "Expenses",
     "slug": "expenses_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,25 +9,28 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#312E38"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.guizi.expenses"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#312E38"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b94e8689-43ad-4ffe-ae36-92ba2e58b8f2"
+      }
+    }
   }
 }

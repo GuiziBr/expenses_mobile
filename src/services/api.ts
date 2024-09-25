@@ -6,7 +6,7 @@ type APIInstanceProps = AxiosInstance & {
   registerInterceptTokenManager: (signOut: SignOut) => () => void
 }
 
-const api = axios.create({ baseURL: 'http://192.168.1.77:3333' }) as APIInstanceProps
+const api = axios.create({ baseURL: process.env.EXPO_PUBLIC_SERVER_URL }) as APIInstanceProps
 
 api.registerInterceptTokenManager = signOut => {
   const interceptTokenManager = api.interceptors.response.use(response => response, requestError => {

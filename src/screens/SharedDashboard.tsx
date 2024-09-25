@@ -45,7 +45,7 @@ export function SharedDashboard() {
             filterBy: constants.filterValues[filters.filterBy as keyof typeof constants.filterValues],
             filterValue: filters.filterValue
           },
-          orderBy: 'due_date',
+          orderBy: 'date',
           orderType:'desc',
           offset: isInitialLoad ? 0 : expenses.length,
           limit: 10,
@@ -129,7 +129,7 @@ export function SharedDashboard() {
   return (
     <VStack flex={1}>
       <HomeHeader/>
-      <HStack justifyContent="space-evenly" mt="-10" mb={5}>
+      <HStack justifyContent="space-evenly" mt={-10} mb={5}>
         <BalanceCard
           cardTitle="Incomes"
           cardText={formatAmount(balance.sharedBalance.paying)}

@@ -30,7 +30,7 @@ export function ExpensesFilterModal ({ isVisible, onClose, title, onSubmit }: Ex
 
   const [filterValues, setFilterValues] = useState<FilterValues[]>([])
   const [currentFilters, setCurrentFilters] = useState<CurrentFilters>(initialFilter)
-  const [maxStartDate, setMaxStartDate] = useState<Date>(new Date())
+  const [maxStartDate, setMaxStartDate] = useState<Date>()
   const [minEndDate, setMinEndDate] = useState<Date>()
   const [isLoading, setIsLoading] = useState(false)
 
